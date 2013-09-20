@@ -1,0 +1,70 @@
+Type in a tiny exp folowed by one or two Ctrl-d's:
+
+The result of evaluating:
+(1+2)
+is: 3
+Type in a tiny exp folowed by one or two Ctrl-d's:
+
+The result of evaluating:
+(1-2)
+is: -1
+Type in a tiny exp folowed by one or two Ctrl-d's:
+
+The result of evaluating:
+(2*3)
+is: 6
+Type in a tiny exp folowed by one or two Ctrl-d's:
+
+The result of evaluating:
+(6/3)
+is: 2
+Type in a tiny exp folowed by one or two Ctrl-d's:
+
+The result of evaluating:
+((1+2)-3)
+is: 0
+Type in a tiny exp folowed by one or two Ctrl-d's:
+
+The result of evaluating:
+(1+(2*3))
+is: 7
+Type in a tiny exp folowed by one or two Ctrl-d's:
+
+The result of evaluating:
+((1-2)+3)
+is: 2
+Type in a tiny exp folowed by one or two Ctrl-d's:
+
+The result of evaluating:
+((2/2)-3)
+is: -2
+Type in a tiny exp folowed by one or two Ctrl-d's:
+
+The result of evaluating:
+(3*(2+2))
+is: 12
+Type in a tiny exp folowed by one or two Ctrl-d's:
+
+The result of evaluating:
+((1+2)-(3-4))
+is: 4
+Type in a tiny exp folowed by one or two Ctrl-d's:
+
+The result of evaluating:
+((2*3)+(2/2))
+is: 7
+Type in a tiny exp folowed by one or two Ctrl-d's:
+
+The result of evaluating:
+(2-((2+4)/2))
+is: -1
+Type in a tiny exp folowed by one or two Ctrl-d's:
+
+The result of evaluating:
+((2*(2+4))-1)
+is: 11
+Type in a tiny exp folowed by one or two Ctrl-d's:
+
+The result of evaluating:
+((2*(2+4))/2)
+is: 6
