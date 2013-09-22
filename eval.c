@@ -251,8 +251,8 @@ switch (e->kind) {
         break;
     case powerK:
 
-	left = evalEXP(e->val.plusE.left);
-	right = evalEXP(e->val.plusE.right);
+	left = evalEXP(e->val.powerE.left);
+	right = evalEXP(e->val.powerE.right);
 
 	/*identity: a^0 */
 	if(right.kind == number && right.val.intconstE == 0) {
