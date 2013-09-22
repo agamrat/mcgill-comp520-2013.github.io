@@ -25,7 +25,7 @@ switch (e->kind) {
 	left = evalEXP(e->val.plusE.left);
 	right = evalEXP(e->val.plusE.right);
 
-	/*identities: a*0*/
+	/*identities: a* 0*/
 	if((left.kind == number && left.val.intconstE == 0) ||
 		(right.kind == number && right.val.intconstE == 0)) {
 		result.kind = number;
@@ -258,6 +258,7 @@ switch (e->kind) {
    	}
    
         break;
+        
     case absK:
     	right = evalEXP(e->val.absE.x);
     	if(right.kind == string) {
@@ -270,6 +271,7 @@ switch (e->kind) {
     		result.val.intconstE = abs(right.val.intconstE);
     	}
     	break; 
+
     default: 
 	printf("ERROR: Impossible type for an expression node.");
 	result.kind = string;
