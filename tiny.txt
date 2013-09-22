@@ -1,0 +1,7 @@
+1. We will be using flex+bison for the WIG project.
+2. It was time-consuming and frustrating to figure out how to use git and github.
+Modifying the grammar was interesting and it was fun to watch the evaluator 
+actually work at the end. 
+3. It would have been fun to understand the tiny.l and tiny.y files better and
+make more modifications to them. Maybe next year students could write more of
+the grammar itself.
