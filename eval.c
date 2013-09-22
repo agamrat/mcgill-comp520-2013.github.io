@@ -302,6 +302,19 @@ switch (e->kind) {
    	}
    
         break;
+        
+    case absK:
+    	right = evalEXP(e->val.absE.x);
+    	if(right.kind == string) {
+    		result.kind = string;
+    		sprintf(buffer, "abs(%s)", right.val.idE);
+		result.val.idE = buffer;
+    	}
+    	else {
+    		result.kind = number;
+    		result.val.intconstE = abs(right.val.intconstE);
+    	}
+    	break; 
 
     default: 
 	printf("ERROR: Impossible type for an expression node.");
