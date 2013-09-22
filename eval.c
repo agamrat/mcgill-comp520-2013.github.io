@@ -33,6 +33,18 @@ switch (e->kind) {
 		break;
 	}
 
+	/*identities: 1*a */
+  	if(left.kind == number && left.val.intconstE == 1) {
+ 	   result = right;
+ 	   break;
+ 	 }
+
+ 	/*identities: a*1 */
+ 	if(right.kind == number && right.val.intconstE == 1) {
+ 	  result = left;
+ 	  break;
+ 	}
+ 	
 	/*basic evaluation*/
 	if(left.kind == string) {
 		result.kind = string;
@@ -67,6 +79,18 @@ switch (e->kind) {
 		result.val.intconstE = 0;
 		break;
 	}
+
+	/*identity: x/1 */
+	if(right.kind == number && right.val.intconstE == 1) {
+   		if(left.kind == number) {    
+   	 		result.kind = number;
+    			result.val.intconstE = left.val.intconstE;
+    		} else  {
+    			result.kind = string;
+    			result.val.idE = left.val.idE;
+    		}
+   	 	break;
+  	}	
 
 	/*identity: 0/x */
 	if(left.kind == number && left.val.intconstE == 0) {
@@ -197,6 +221,7 @@ switch (e->kind) {
 
 	/*identity: a%1 */
 	if(right.kind == number && right.val.intconstE == 1) {
+		result.kind = number;
 		result.val.intconstE = 0;
 		break;
 	}
@@ -231,9 +256,28 @@ switch (e->kind) {
 
 	/*identity: a^0 */
 	if(right.kind == number && right.val.intconstE == 0) {
+		result.kind = number;
 		result.val.intconstE = 1;
 		break;
 	}
+	
+  	/*identity: a^1 */
+  	if(right.kind == number && right.val.intconstE == 1) {
+  		result = left;
+    		break;
+  	}
+
+  	/*identity: 1^a */
+  	if(left.kind == number && left.val.intconstE == 1) {
+    		result = left;
+    		break;
+  	}
+
+  	/*identity: 0^a */
+  	if(left.kind == number && left.val.intconstE == 0) {
+  		result = left;
+    		break;
+  	}
 	
 	/*basic evaluation */	
 	if(left.kind == string) {
