@@ -43,6 +43,12 @@ void prettyEXP(EXP *e)
          printf("%%");
          prettyEXP(e->val.modE.right);
          printf(")");
+    case powerK:
+         printf("(");
+         prettyEXP(e->val.powerE.left);
+         printf("^");
+         prettyEXP(e->val.powerE.right);
+         printf(")");
          break;
   }
 }

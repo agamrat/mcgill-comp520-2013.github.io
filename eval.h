@@ -3,6 +3,14 @@
 
 #include "tree.h"
 
-int evalEXP(EXP *e);
+typedef struct EXPresult {
+  enum {string, number} kind;
+  union {
+    char *idE;
+    int intconstE;
+  } val;
+} EXPresult;
+
+EXPresult evalEXP(EXP *e);
 
 #endif /* !EVAL_H */

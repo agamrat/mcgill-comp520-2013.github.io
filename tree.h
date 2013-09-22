@@ -3,7 +3,7 @@
  
 typedef struct EXP {
   int lineno;
-  enum {idK,intconstK,timesK,divK,plusK,minusK,modK} kind;
+  enum {idK,intconstK,timesK,divK,plusK,minusK,modK,powerK} kind;
   union {
     char *idE;
     int intconstE;
@@ -12,6 +12,7 @@ typedef struct EXP {
     struct {struct EXP *left; struct EXP *right;} plusE;
     struct {struct EXP *left; struct EXP *right;} minusE;
     struct {struct EXP *left; struct EXP *right;} modE;
+    struct {struct EXP *left; struct EXP *right;} powerE;
   } val;
 } EXP;
  
@@ -28,5 +29,7 @@ EXP *makeEXPplus(EXP *left, EXP *right);
 EXP *makeEXPminus(EXP *left, EXP *right);
 
 EXP *makeEXPmod(EXP *left, EXP *right);
+
+EXP *makeEXPpower(EXP *left, EXP *right);
 
 #endif /* !TREE_H */

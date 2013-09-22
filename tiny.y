@@ -25,6 +25,7 @@ void yyerror() {
 
 %left '+' '-'
 %left '*' '/' '%'
+%right "**"
 
 %% 
 program: exp
@@ -35,6 +36,8 @@ exp : tIDENTIFIER
       { $$ = makeEXPid ($1); }
     | tINTCONST
       { $$ = makeEXPintconst ($1); }
+    | exp 'e' exp
+      { $$ = makeEXPpower ($1, $3); }
     | exp '*' exp
       { $$ = makeEXPtimes ($1, $3); }
     | exp '/' exp

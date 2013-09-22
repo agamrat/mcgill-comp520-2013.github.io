@@ -1,37 +1,274 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 #include "eval.h"
 
-int evalEXP(EXP *e)
-{ switch (e->kind) {
+EXPresult evalEXP(EXP *e)
+
+{ 
+EXPresult result;
+char * buffer = (char*)malloc(1000);
+EXPresult left;
+EXPresult right;
+
+switch (e->kind) {
     case idK:
-         printf("I can't evaluate the value of an identifier!");
-	 return(0);
+	 result.kind = string;
+	 result.val.idE = e->val.idE;
          break;
     case intconstK:
-	 return(e->val.intconstE);
+	 result.kind = number;
+	 result.val.intconstE = e->val.intconstE;
          break;
     case timesK:
-	 return(evalEXP(e->val.timesE.left) * 
-	        evalEXP(e->val.timesE.right));
-         break;
+
+	left = evalEXP(e->val.plusE.left);
+	right = evalEXP(e->val.plusE.right);
+
+	/*identities: a* 0*/
+	if((left.kind == number && left.val.intconstE == 0) ||
+		(right.kind == number && right.val.intconstE == 0)) {
+		result.kind = number;
+		result.val.intconstE = 0;
+		break;
+	}
+
+	/*basic evaluation*/
+	if(left.kind == string) {
+		result.kind = string;
+		if(right.kind == string) {
+	 		sprintf(buffer, "%s * %s", left.val.idE, right.val.idE);
+			result.val.idE = buffer;	
+		}
+		else {
+			sprintf(buffer, "%s * %d", left.val.idE, right.val.intconstE);	
+			result.val.idE = buffer;
+		}
+	}
+	else if (right.kind == string) {
+		result.kind = string;
+		sprintf(buffer, "%d * %s", left.val.intconstE, right.val.idE);
+		result.val.idE = buffer;
+	}
+	else {
+	        result.kind = number;
+		result.val.intconstE = left.val.intconstE * right.val.intconstE;
+   	}      
+        break;
     case divK:
-     return (evalEXP(e->val.divE.left)/
-             evalEXP(e->val.divE.right));
-         break;
+
+	left = evalEXP(e->val.plusE.left);
+	right = evalEXP(e->val.plusE.right);
+
+	/*divide by zero error*/
+	if(right.kind == number && right.val.intconstE == 0) {
+		printf("\nTiny Error Message: Divide by zero encountered.\n");
+		result.kind = number;
+		result.val.intconstE = 0;
+		break;
+	}
+
+	/*identity: 0/x */
+	if(left.kind == number && left.val.intconstE == 0) {
+		result.kind = number;
+		result.val.intconstE = 0;
+		break;
+	}
+
+	/*basic evaluation */
+	 if(left.kind == string) {
+		result.kind = string;
+		if(right.kind == string) {
+	 		sprintf(buffer, "%s / %s", left.val.idE, right.val.idE);
+			result.val.idE = buffer;	
+		}
+		else {
+			sprintf(buffer, "%s / %d", left.val.idE, right.val.intconstE);	
+			result.val.idE = buffer;
+		}
+	}
+	else if (right.kind == string) {
+		result.kind = string;
+		sprintf(buffer, "%d / %s", left.val.intconstE, right.val.idE);
+		result.val.idE = buffer;
+	}
+	else {
+	       result.kind = number;
+		result.val.intconstE = left.val.intconstE / right.val.intconstE;
+   	}      
+        break;
     case plusK:
-	 return(evalEXP(e->val.plusE.left) + 
-	        evalEXP(e->val.plusE.right));
-         break;
+
+	left = evalEXP(e->val.plusE.left);
+	right = evalEXP(e->val.plusE.right);
+
+	/*identities: a+0 */
+	if(right.kind == number && right.val.intconstE == 0) {
+		if(left.kind == number) {
+		result.kind = number;		
+		result.val.intconstE = left.val.intconstE;
+		}
+		else {
+		result.kind = string;
+		result.val.idE = left.val.idE;
+		}
+		break;
+	}
+	if(left.kind == number && left.val.intconstE == 0) {
+		if(right.kind == number) {
+		result.kind = number;		
+		result.val.intconstE = right.val.intconstE;
+		}
+		else {
+		result.kind = string;
+		result.val.idE = right.val.idE;
+		}
+		break;
+	}
+
+	/*basic evaluation */
+	if(left.kind == string) {
+		result.kind = string;
+		if(right.kind == string) {
+	 		sprintf(buffer, "%s + %s", left.val.idE, right.val.idE);
+			result.val.idE = buffer;	
+		}
+		else {
+			sprintf(buffer, "%s + %d", left.val.idE, right.val.intconstE);	
+			result.val.idE = buffer;
+		}
+	}
+	else if (right.kind == string) {
+		result.kind = string;
+		sprintf(buffer, "%d + %s", left.val.intconstE, right.val.idE);
+		result.val.idE = buffer;
+	}
+	else {
+	       result.kind = number;
+		result.val.intconstE = left.val.intconstE + right.val.intconstE;
+   	}      
+        break;
+
     case minusK:
-	 return(evalEXP(e->val.minusE.left) -
-	         evalEXP(e->val.minusE.right));
-         break;
+
+	left = evalEXP(e->val.plusE.left);
+	right = evalEXP(e->val.plusE.right);
+
+	/*identity: a-0 */
+	if(right.kind == number && right.val.intconstE == 0) {
+		if(left.kind == number) {
+		result.kind = number;		
+		result.val.intconstE = left.val.intconstE;
+		}
+		else {
+		result.kind = string;
+		result.val.idE = left.val.idE;
+		}
+		break;
+	}
+
+	/*basic evaluation */
+	if(left.kind == string) {
+		result.kind = string;
+		if(right.kind == string) {
+	 		sprintf(buffer, "%s - %s", left.val.idE, right.val.idE);
+			result.val.idE = buffer;	
+		}
+		else {
+			sprintf(buffer, "%s - %d", left.val.idE, right.val.intconstE);	
+			result.val.idE = buffer;
+		}
+	}
+	else if (right.kind == string) {
+		result.kind = string;
+		sprintf(buffer, "%d - %s", left.val.intconstE, right.val.idE);
+		result.val.idE = buffer;
+	}
+	else {
+	       result.kind = number;
+		result.val.intconstE = left.val.intconstE - right.val.intconstE;
+   	}   
+	
+        break;
     case modK:
-         return(evalEXP(e->val.modE.left) % 
-                 evalEXP(e->val.modE.right)); 
-         break;
+
+	left = evalEXP(e->val.plusE.left);
+	right = evalEXP(e->val.plusE.right);
+
+	/*identity: a%1 */
+	if(right.kind == number && right.val.intconstE == 1) {
+		result.val.intconstE = 0;
+		break;
+	}
+	
+	/*basic evaluation */	
+	if(left.kind == string) {
+		result.kind = string;
+		if(right.kind == string) {
+	 		sprintf(buffer, "%s %% %s", left.val.idE, right.val.idE);
+			result.val.idE = buffer;	
+		}
+		else {
+			sprintf(buffer, "%s %% %d", left.val.idE, right.val.intconstE);	
+			result.val.idE = buffer;
+		}
+	}
+	else if (right.kind == string) {
+		result.kind = string;
+		sprintf(buffer, "%d %% %s", left.val.intconstE, right.val.idE);
+		result.val.idE = buffer;
+	}
+	else {
+	       result.kind = number;
+		result.val.intconstE = left.val.intconstE % right.val.intconstE;
+   	}
+   
+        break;
+    case powerK:
+
+	left = evalEXP(e->val.plusE.left);
+	right = evalEXP(e->val.plusE.right);
+
+	/*identity: a^0 */
+	if(right.kind == number && right.val.intconstE == 0) {
+		result.val.intconstE = 1;
+		break;
+	}
+	
+	/*basic evaluation */	
+	if(left.kind == string) {
+		result.kind = string;
+		if(right.kind == string) {
+	 		sprintf(buffer, "%s ^ %s", left.val.idE, right.val.idE);
+			result.val.idE = buffer;	
+		}
+		else {
+			sprintf(buffer, "%s ^ %d", left.val.idE, right.val.intconstE);	
+			result.val.idE = buffer;
+		}
+	}
+	else if (right.kind == string) {
+		result.kind = string;
+		sprintf(buffer, "%d ^ %s", left.val.intconstE, right.val.idE);
+		result.val.idE = buffer;
+	}
+	else {
+		result.kind = number;
+		result.val.intconstE = (int)(pow(left.val.intconstE, right.val.intconstE));
+   	}
+   
+        break;
+
     default: 
-	 printf("ERROR: Impossible type for an expression node.");
-	 return(0);
+	printf("ERROR: Impossible type for an expression node.");
+	result.kind = string;
+	result.val.idE = "";
+	break;
+
   }
+
+free(buffer);
+	
+return result;
+
 }

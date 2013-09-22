@@ -70,3 +70,12 @@ EXP *makeEXPmod(EXP *left, EXP *right)
   e->val.modE.right = right;
   return e;
 }
+EXP *makeEXPpower(EXP *left, EXP *right)
+{ EXP *e;
+  e = NEW(EXP);
+  e->lineno = lineno;
+  e->kind = powerK;
+  e->val.powerE.left = left;
+  e->val.powerE.right = right;
+  return e;
+}

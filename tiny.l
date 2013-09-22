@@ -10,13 +10,15 @@ extern int lineno;
 [ \t]+    /* ignore */;
 \n        lineno++;
 
-"*"       return '*';
+"**"	  return 'e';
+"*"	  return '*';
 "/"       return '/';
 "%"       return '%';
 "+"       return '+';
 "-"       return '-';
 "("       return '(';
 ")"       return ')';
+"abs("	  return '|';
 
 0|([1-9][0-9]*) {
   yylval.intconst = atoi (yytext);

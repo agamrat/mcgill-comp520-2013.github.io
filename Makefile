@@ -1,9 +1,9 @@
 CC = gcc
 
-CFLAGS = -Wall -ansi -pedantic
+CFLAGS = -g -Wall -ansi -pedantic
 
 main: y.tab.o lex.yy.o main.o tree.h tree.o pretty.h pretty.o eval.h eval.o memory.h memory.o
-	$(CC) lex.yy.o y.tab.o tree.o pretty.o eval.o memory.o main.o -o tiny -lfl -g
+	$(CC) lex.yy.o y.tab.o tree.o pretty.o eval.o memory.o main.o -o tiny -lfl -lm
 
 y.tab.c y.tab.h: tiny.y
 	bison --yacc --defines tiny.y
