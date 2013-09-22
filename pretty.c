@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include "pretty.h"
  
-void prettyEXP(EXP *e)
-{ switch (e->kind) {
+void prettyEXP(EXP *e){
+ EXP *left;
+ EXP *right;
+ switch (e->kind) {
     case idK:
          printf("%s",e->val.idE);
          break;
@@ -10,45 +12,146 @@ void prettyEXP(EXP *e)
          printf("%i",e->val.intconstE);
          break;
     case timesK:
-         printf("(");
-         prettyEXP(e->val.timesE.left);
+     	left = e->val.timesE.left;
+     	right = e->val.timesE.right;
+	if(left->kind == minusK || left->kind == plusK || left->kind == divK || left->kind == modK){
+		printf("(");
+		prettyEXP(left);
+		printf(")");
+	}
+     	else{
+        	prettyEXP(left);
+        }
          printf("*");
-         prettyEXP(e->val.timesE.right);
-         printf(")");
+         
+        if(right->kind == plusK || right->kind == divK || right->kind == minusK || right->kind == modK){
+		printf("(");
+		prettyEXP(right);
+		printf(")");
+	}
+	else{
+        	prettyEXP(right);
+        }
+
          break;
     case divK:
-         printf("(");
-         prettyEXP(e->val.divE.left);
+	 left = e->val.divE.left;
+	 right = e->val.divE.right;
+	if(left->kind == plusK || left->kind == timesK || left->kind == divK || left->kind == minusK || left->kind == modK){
+		printf("(");
+		prettyEXP(left);
+		printf(")");
+	}
+	else{
+        	prettyEXP(left);
+        }
          printf("/");
-         prettyEXP(e->val.divE.right);
-         printf(")");
-         break;
+         
+         if(right->kind == timesK || right->kind == divK || right->kind == plusK || right->kind == minusK || right->kind == modK){
+		printf("(");
+		prettyEXP(right);
+		printf(")");
+	}
+	else{
+        	prettyEXP(right);
+        }
+        break;
     case plusK:
-         printf("(");
-         prettyEXP(e->val.plusE.left);
-         printf("+");
-         prettyEXP(e->val.plusE.right);
-         printf(")");
+	left = e->val.plusE.left;
+	right = e->val.plusE.right;
+	if(left->kind == minusK){
+		printf("(");
+		prettyEXP(left);
+		printf(")");
+	}
+	else{
+        	prettyEXP(left);
+        }
+        
+        printf("+");
+         
+        if(right->kind == minusK){
+		printf("(");
+		prettyEXP(right);
+		printf(")");
+	}
+	else{
+        	prettyEXP(right);
+        }
+         
          break;
     case minusK:
-         printf("(");
-         prettyEXP(e->val.minusE.left);
+	left = e->val.minusE.left;
+	right = e->val.minusE.right;
+	if(left->kind == plusK || left->kind == minusK){
+		printf("(");
+		prettyEXP(left);
+		printf(")");
+	}
+	else{
+        	prettyEXP(left);
+        }
          printf("-");
-         prettyEXP(e->val.minusE.right);
-         printf(")");
+         
+         if(right->kind == plusK || right->kind == minusK){
+		printf("(");
+		prettyEXP(right);
+		printf(")");
+	}
+	else{
+        	prettyEXP(right);
+        }
          break;
+    case absK:
+    	 printf("abs(");
+    	 prettyEXP(e->val.absE.x);
+    	 printf(")");
+    	 break;
     case modK:
-         printf("(");
-         prettyEXP(e->val.modE.left);
+    	left = e->val.modE.left;
+    	right = e->val.modE.right;
+ 	if(left->kind == plusK || left->kind == timesK || left->kind == divK || left->kind == minusK || left->kind == modK){
+		printf("(");
+		prettyEXP(left);
+		printf(")");
+	}
+	else{
+        	prettyEXP(left);
+        }
          printf("%%");
-         prettyEXP(e->val.modE.right);
-         printf(")");
+         
+         if(right->kind == timesK || right->kind == divK || right->kind == plusK || right->kind == minusK || right->kind == modK){
+		printf("(");
+		prettyEXP(right);
+		printf(")");
+	}
+	else{
+        	prettyEXP(right);
+        }
+        break;
     case powerK:
-         printf("(");
-         prettyEXP(e->val.powerE.left);
-         printf("^");
-         prettyEXP(e->val.powerE.right);
-         printf(")");
-         break;
+    	left = e->val.powerE.left;
+    	right = e->val.powerE.right;
+    	
+	if(left->kind == plusK || left->kind == timesK || left->kind == divK || left->kind == minusK || left->kind == modK || left->kind == powerK){
+		printf("(");
+		prettyEXP(left);
+		printf(")");
+	}
+	else{
+        	prettyEXP(left);
+        }
+         printf("**");
+         
+         if(right->kind == timesK || right->kind == divK || right->kind == plusK || right->kind == minusK || right->kind == modK || right->kind == powerK){
+		printf("(");
+		prettyEXP(right);
+		printf(")");
+	}
+	else{
+        	prettyEXP(right);
+        }
+    	
+    	break;
   }
 }

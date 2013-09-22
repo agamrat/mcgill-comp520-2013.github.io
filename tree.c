@@ -70,6 +70,7 @@ EXP *makeEXPmod(EXP *left, EXP *right)
   e->val.modE.right = right;
   return e;
 }
+
 EXP *makeEXPpower(EXP *left, EXP *right)
 { EXP *e;
   e = NEW(EXP);
@@ -77,5 +78,14 @@ EXP *makeEXPpower(EXP *left, EXP *right)
   e->kind = powerK;
   e->val.powerE.left = left;
   e->val.powerE.right = right;
+  return e;
+}
+
+EXP *makeEXPabs(EXP *x){
+  EXP *e;
+  e = NEW(EXP);
+  e->lineno = lineno;
+  e->kind = absK;
+  e->val.absE.x = x;
   return e;
 }

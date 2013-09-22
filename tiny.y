@@ -50,6 +50,8 @@ exp : tIDENTIFIER
       { $$ = makeEXPminus (makeEXPintconst(0), $2); }
     | exp '%' exp
       { $$ = makeEXPmod ($1, $3); }
+    | '|' exp ')'
+      { $$ = makeEXPabs ($2); }
     | '(' exp ')'
       { $$ = $2; } 
 ;
