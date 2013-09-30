@@ -1,7 +1,7 @@
 service {
 
 	const html intro = <html> <body>
-		Welcome to words with enemies.
+		Welcome to hangman for one.
 		<br />
 		Choose an integer from 1 to 5 to pick a word.
 		<br />
@@ -25,6 +25,12 @@ service {
 
 	const html success = <html> <body>
 		Congratulations. The word was <[realWord]>. You win.
+		</body></html>;
+	
+	const html playagain = <html><body><button>
+			<a href="http://www.cs.mcgill.ca/~agamra/hangman.pl?Guess">
+			Play Again
+			</a></button>
 	</body></html>;
 
 	const html failure = <html> <body>
@@ -95,7 +101,7 @@ service {
 		}
 		if(word > 5 || word < 0) {
 		show invalid;
-		exit intro;
+		exit playagain;
 		}
 
 		w1="_";
@@ -142,9 +148,12 @@ service {
 				triesLeft =  triesLeft + 1;
 			}
 		}
+		if(triesLeft > 5) {
+		triesLeft = 5;
+		}
 		if (position > 4 || position < 1) {
 		show invalid;
-		exit intro;
+		exit playagain;
 		}
 	    }
 	    if(triesLeft > 0 ) {
@@ -153,6 +162,6 @@ service {
 		else {
 		show failure;
 		}
-	   exit intro;
+	   exit playagain;
 	}
 }
