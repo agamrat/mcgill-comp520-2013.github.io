@@ -36,18 +36,38 @@ int main(){
 		fclose(session);
 		
 		printf("Content-type: text/html\n\n");
-		printf("<html><body>Start by making a guess.<br />\n");
-		printf("You have %d tries left<br />\n", triesLeft);
-		printf("Guess a letter in ____.<br />\n");
-		printf("<form action=\"http://www.cs.mcgill.ca/~vkovec/hangman.cgi\" method=\"post\">\n");
-		printf("Position (1-4): <input name=\"position\" type=\"text\" size=\"1\">\n");
-		printf("<br />Letter: <input name=\"letter\" type=\"text\" size=\"1\">\n");
-		printf("<br /><input type=\"submit\" value=\"go\"/></form>");
-		printf("</body></html>");
+		//if the input is invalid
+		if(option > 5 || option <= 0){
+			printf("<html><body>Your input is not valid. Game over.<br />");
+			printf("<body><form action=\"http://www.cs.mcgill.ca/~vkovec/intro.html\">");
+			printf("<input type=\"submit\" value=\"Play Again\"></form></body></html>");
+	
+			return 1;
+		}
+		
+		else{
+			printf("<html><body>Start by making a guess.<br />\n");
+			printf("You have %d tries left<br />\n", triesLeft);
+			printf("Guess a letter in ____.<br />\n");
+			printf("<form action=\"http://www.cs.mcgill.ca/~vkovec/hangman.cgi\" method=\"post\">\n");
+			printf("Position (1-4): <input name=\"position\" type=\"text\" size=\"1\">\n");	
+			printf("<br />Letter: <input name=\"letter\" type=\"text\" size=\"1\">\n");
+			printf("<br /><input type=\"submit\" value=\"go\"/></form>");
+			printf("</body></html>");
+		}
 	}
 		
 	else{
 		sscanf(string, "position=%d letter=%c", &position, &letter);
+		
+		//if the input is invalid
+		if(position > 4 || position < 1){
+			printf("Content-type: text/html\n\n");
+			printf("<html><body>Your input is not valid. Game over.<br />");
+			printf("<body><form action=\"http://www.cs.mcgill.ca/~vkovec/intro.html\">");
+			printf("<input type=\"submit\" value=\"Play Again\"></form></body></html>");
+			return 1;
+		}
 		
 		char line[50];
 		
@@ -74,7 +94,9 @@ int main(){
 				//if all the letters have been guessed correctly
 				if(correct[0] != '_' && correct[1] != '_' && correct[2] != '_' && correct[3] != '_'){
 					printf("Content-type: text/html\n\n");
-					printf("<html><body>Congratulations. The word was %s. You win.</body></html>", words[option-1]);
+					printf("<html><body>Congratulations. The word was %s. You win.<br />", words[option-1]);
+					printf("<form action=\"http://www.cs.mcgill.ca/~vkovec/intro.html\">");
+					printf("<input type=\"submit\" value=\"Play Again\"></form></body></html>");
 				}
 				else{	
 					printf("Content-type: text/html\n\n");
@@ -106,10 +128,12 @@ int main(){
 			}
 		}
 	
-		//lose if not more tries are left and word has not been guessed
+		//lose if no more tries are left and word has not been guessed
 		else if(triesLeft == 0){
 			printf("Content-type: text/html\n\n");
-			printf("<html> <body>You have failed. Game over.</body></html>");
+			printf("<html> <body>You have failed. Game over.<br />");
+			printf("<form action=\"http://www.cs.mcgill.ca/~vkovec/intro.html\">");
+			printf("<input type=\"submit\" value=\"Play Again\"></form></body></html>");
 		}
 
 	}
