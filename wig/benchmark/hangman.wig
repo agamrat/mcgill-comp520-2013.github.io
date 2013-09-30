@@ -1,0 +1,158 @@
+service {
+
+	const html intro = <html> <body>
+		Welcome to words with enemies.
+		<br />
+		Choose an integer from 1 to 5 to pick a word.
+		<br />
+		<input name="option" type="text" size ="1">
+	</body></html>;
+
+	const html guess = <html> <body>
+		<[message]><br/>
+		You have <[tries]> left.
+		<br />
+		Guess a letter in <[w1]> <[w2]> <[w3]> <[w4]>.
+		<br />Position (1-4):
+		<input name="position" type="text" size="1">
+		<br />Letter:
+		<input name="letter" type="text" size="1">
+	</body></html>;
+
+	const html invalid = <html><body>
+		Your input is not valid. Game over.
+	</body></html>;
+
+	const html success = <html> <body>
+		Congratulations. The word was <[realWord]>. You win.
+	</body></html>;
+
+	const html failure = <html> <body>
+		You have failed. Game over.
+	</body></html>;
+
+	int triesLeft;
+	string w1;
+	string w2;
+	string w3;
+	string w4;
+	string r1;
+	string r2;
+	string r3;
+	string r4;
+
+	string realWord;
+
+	session Guess() {
+		int word;
+		string letterGuessed;
+		int position;
+		string good;
+		string bad;
+		string start;
+		string message;
+		int isfirst;
+		isfirst = 0;
+		good="Your guess was correct.";
+		bad="Sorry, your guess was incorrect.";
+		start="Start by making a guess.";
+		show intro receive[word = option];
+
+		if(word == 1) {
+		realWord = "cats";	
+		r1="c";
+		r2="a";
+		r3="t";
+		r4="s";	
+		}
+		if(word == 2) {
+		realWord = "love";
+		r1="l";
+		r2="o";
+		r3="v";
+		r4="e";			
+		}
+		if(word == 3) {
+		realWord = "cute";
+		r1="c";
+		r2="u";
+		r3="t";
+		r4="e";			
+		}
+		if(word == 4) {
+		realWord = "what";		
+		r1="w";
+		r2="h";
+		r3="a";
+		r4="t";			
+		}
+		if(word == 5) {
+		realWord = "home";
+		r1="h";
+		r2="o";
+		r3="m";
+		r4="e";			
+		}
+		if(word > 5 || word < 0) {
+		show invalid;
+		exit intro;
+		}
+
+		w1="_";
+		w2="_";
+		w3="_";
+		w4="_";
+		
+
+		triesLeft = 5;
+		while(triesLeft > 0 && (w1=="_" || w2=="_"||w3=="_" || w4=="_")) {
+
+		if(isfirst == 0) {
+			message = start;
+			isfirst = 1;
+		}
+		show plug guess [message = message,tries = triesLeft,w1=w1,w2=w2,w3=w3,w4=w4] receive[position = position, letterGuessed = letter];
+		message=bad;
+		triesLeft = triesLeft - 1;
+		if(position == 1) {
+			if(r1 == letterGuessed) {
+				w1 = r1;
+				message=good;
+				triesLeft = triesLeft + 1;
+			}
+		}
+		if(position == 2) {
+			if(r2 == letterGuessed) {
+				w2 = r2;
+				message=good;
+				triesLeft =  triesLeft + 1;
+			}
+		}
+		if(position==3) {
+			if(r3 == letterGuessed) {
+				w3 = r3;
+				message=good;
+				triesLeft = triesLeft + 1;
+			}
+		}
+		if(position ==4) {
+			if(r4 == letterGuessed) {
+				w4 = r4;
+				message=good;
+				triesLeft =  triesLeft + 1;
+			}
+		}
+		if (position > 4 || position < 1) {
+		show invalid;
+		exit intro;
+		}
+	    }
+	    if(triesLeft > 0 ) {
+		show plug success[realWord =realWord];
+		}
+		else {
+		show failure;
+		}
+	   exit intro;
+	}
+}
