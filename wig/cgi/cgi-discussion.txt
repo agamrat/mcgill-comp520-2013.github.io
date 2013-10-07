@@ -1,0 +1,10 @@
+Here is a link to the running CGI code: www.cs.mcgill.ca/~vkovec/intro.html
+
+In order to generate the CGI code for a WIG service, the compiler might 
+first parse the syntax tree of the WIG service. Then it would fill in 
+the gaps left by the <[ ]> tags. In addition to this it would need to 
+add the <form> tag to the html code sending input so that the input
+is sent to the CGI script through a post.
+An extra complications for translating the WIG benchmark using the 
+compiler may be figuring out what variables need to be saved in the 
+session. 

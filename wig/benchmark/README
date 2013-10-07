@@ -1,0 +1,3 @@
+Hangman.wig can be found up and running at: cs.mcgill.ca/~agamra/hangman.pl?Guess.
+It implements a simple hangman game, choosing between 5 possible words and allowing 5 wrong guesses. To use, enter the position of the letter and the letter itself into the form.
+Although the guess box is all one line, each word can be assumed to be 4 letters long (as the position field is only valid for 1-4).

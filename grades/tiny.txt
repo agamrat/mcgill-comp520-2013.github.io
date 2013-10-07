@@ -1,0 +1,33 @@
+Tiny Deliverable 1 
+Things to look for:
+
+  1-- Correct implementation of new operators (modulo, abs, etc)
+  2-- Pretty printer with minimum parentheses
+  3-- Introduction and handling of unary minus operator
+  4-- Reasonable implementation of partial evaluation of expressions
+  5-- Provide input/output data
+  6-- Provide a well written README file.
+
+
+Number of major things missing (1-4)    Grade
+==============================================
+         0                                A+  
+         1                                A   
+         2*                               A-  
+         3                                B+  
+         4+                               B   
+
+================================================================================
+* note that an item that is considered to be highly important is  
+counted as 2 missing things.
+
+Group D
+=======
+Grade: A-
+
+- You should make a directory for tiny and keep the files in it.
+- prantheses are printed wrong. 1+2-(3-4) prints (1+2)-(3-4)
+- partial evaluation does not work for abs() and modulo . abs(---a), a%0
+- precedence handling is wrong . a*0**b+1*a should give a and not 0.
+
+

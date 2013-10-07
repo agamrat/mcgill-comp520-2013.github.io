@@ -1,0 +1,12 @@
+We have to decide what types are allowed in Wig and the context in which a type makes sense or makes no sense. 
+These things are universal in programming. Thus, we have to define type rules. 
+Only after we have a good set of type rules, we can proceed to do the code generation part.
+ 
+We have to allow the use of tuple. A tuple in Wig is similar to a struct in C. Using just simple data types significantly 
+limits the power of the wig language. But then the type checker should be much more complex with tuples. 
+It will not be easy to allow passing tuples as arguments in functions and returning tuples in functions.
+ 
+CGI is stateless. No information remains on the server. But one main features of Wig is sessions, and different sessions 
+can interact. The use of global variables in Wig allows interactions among sessions and different users. Sequences of
+sessions can be modeled to be interaction between clients and the server. The flow of control needs to be defined very
+clearly. A session can possible be stopped temporally and restarted later. CGI scripts usually do not allow these.
