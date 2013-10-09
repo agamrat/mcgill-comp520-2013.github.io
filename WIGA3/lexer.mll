@@ -11,8 +11,8 @@ rule exp = parse
   | '\n'	{ NEWLINE }
 
   | "session"	{ SESSION }
-  | "service"	{ SERVICE }
-  | "schema"
+  | "service"	{ print_endline "lexed service"; flush stdout; SERVICE }
+  | "schema"	{ SCHEMA }
   | "return"	{ RETURN }
   | "exit"	{ EXIT }
   | "show"	{ SHOW }
@@ -24,6 +24,8 @@ rule exp = parse
 
   | "int"	{ INTDEC }
   | "string"	{ STRINGDEC }
+  | "bool"	{ BOOLDEC }
+  | "void"	{ VOIDDEC }
   | "const"	{ CONST }
   | "html"	{ HTML }
 
@@ -36,8 +38,8 @@ rule exp = parse
   | "<="	{ GREATEROREQUAL }
   | ">="	{ LESSOREQUAL }
 
-  | "\+"	{ SLASHPLUS }
-  | "\-"	{ SLASHMINUS }
+  | "\\+"	{ SLASHPLUS }
+  | "\\-"	{ SLASHMINUS }
 
 (*logic ops*)
   | "&&"	{ AND }
@@ -61,15 +63,15 @@ rule exp = parse
   | ")"		{ RPAREN }
   | "["		{ RBRACKET }
   | "]"		{ LBRACKET }
-  | "{"		{ LBRACE }
-  | "}"		{ RBRACE }
+  | "{"		{ print_endline "lexed lbrace"; flush stdout; LBRACE }
+  | "}"		{ print_endline "lexed rbrace"; flush stdout; RBRACE }
   | ","		{ COMMA }
   | ";"		{ SEMICOLON }
 
-  | digit+
+  | digit+ as number
 		{ INTCONST (int_of_string number) }
   | stringId as id
-		{ IDENTIFIER id }
+		{ print_endline (("lexed id=\"" ^ id) ^"\""); flush stdout; IDENTIFIER id }
 
   | "<html>"	{ OHTML; htmlexp lexbuf }
 
@@ -80,8 +82,10 @@ rule exp = parse
 and htmlexp = parse
   | "</html>"	{ CHTML; exp lexbuf }
   | "<" 	{ OPENTAG; htmltagexp lexbuf }
+  | "</"	{ OENDTAG; htmltagexp lexbuf }
   | "<["	{ OPENGAP; holeexp lexbuf }
   | stringId as s{ STRINGCONST (s); htmlexp lexbuf }
+  | [' ' '\t']	{ htmlexp lexbuf }
   (*| eof		{ parse_error "premature end of file" }*) (*raise some sort of error if we reach eof without closing the html*)
 
 (*HTML tags*)
@@ -98,4 +102,5 @@ and holeexp = parse
  
 (*HTML right-hand side values*)
 and htmlvalues = parse
-  | " "		{ SPACE; htmltagexp lexbuf }
+  | digit+ as number
+		{ INTCONST (int_of_string number); htmltagexp lexbuf }
