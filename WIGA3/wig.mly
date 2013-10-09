@@ -4,6 +4,9 @@
 
 %{
 open Printf
+open Tree
+
+abstractTree = 
 %}
 
 %token <int> INTCONST
@@ -34,7 +37,7 @@ open Printf
 
 %% /* Grammar rules and actions follow */
 
-session:    /* empty */		{ }
+session:    /* empty */		{}
         | session SESSION identifier LPAREN RPAREN compoundstm {}
 ;
 
@@ -50,6 +53,30 @@ service: SERVICE LBRACE htmls schemas
 
 htmls:	/*empty TODO*/			{}
 ;
+/*(*html				{}
+	| htmls html			{}
+;
+
+html:	CONST HTML identifier ASSIGN
+		HTMLTAG htmlbodies HTMLTAG
+					{}
+;
+
+htmlbodies:
+			{}
+	| nehtmlbodies			{}
+;
+
+nehtmlbodies:
+	htmlbody			{}
+	| nehtmlbodies htmlbody		{}
+;
+
+htmlbody:
+	LESS identifier attributes
+		GREATER			{}
+	| LESS 
+*)*/
 variables:
 	/*empty*/			{}
 	| nevariables			{}
@@ -60,7 +87,7 @@ nevariables:
 ;
 
 variable:
-	typepat identifiers SEMICOLON 	{}
+	typepat identifiers SEMICOLON 	{ /*add variables to hash here*/}
 ;
 
 typepat:
@@ -129,7 +156,8 @@ input:  lvalue ASSIGN identifier	{}
 	
 
 exp:	lvalue				{}
-	| lvalue ASSIGN exp		{}
+	| lvalue ASSIGN exp		{ /*check value is in hash*/
+					/*if not throw error */}
 	| exp EQUALITY exp		{}
 	| exp NOTEQUAL exp		{}
 	| exp LESS exp			{}
@@ -138,7 +166,7 @@ exp:	lvalue				{}
 	| exp GREATEROREQUAL exp 	{}
 	| NOT exp			{}
 	| MINUS exp			{}
-	| exp PLUS exp			{}
+	| exp PLUS exp			{ Plus ($1, $3) }
 	| exp MINUS exp			{}
 	| exp MULTIPLY exp		{}
 	| exp DIVIDE exp		{}
