@@ -6,28 +6,33 @@
 open Printf
 open Tree
 
-abstractTree = 
+(*abstractTree = *)
 %}
 
 %token <int> INTCONST
 %token <string> STRINGCONST
 %token <string> IDENTIFIER
-%token INT BOOL STRING VOID
+%token INTDEC BOOLDEC STRINGDEC VOIDDEC
 %token SCHEMA
 %token PLUS MOD MINUS MULTIPLY DIVIDE
 %token EQUALITY NOTEQUAL LESS GREATER GREATEROREQUAL LESSOREQUAL
 %token SESSION SERVICE RETURN EXIT SHOW IF ELSE WHILE PLUG RECEIVE
 %token FALSE TRUE AND OR NOT
 %token SLASHPLUS SLASHMINUS DOUBLEVEE
-%token ASSIGN
+%token ASSIGN SELECT
 %token TUPLE
 %token LPAREN RPAREN RBRACKET LBRACKET LBRACE RBRACE COMMA SEMICOLON DOT
 %token NEWLINE
 
+%token CONST HTML INPUT
+%token NAME TYPE TEXT RADIO SIZE
+%token OHTML CHTML OPENTAG CLOSETAG OPENGAP CLOSEGAP
+%token OENDTAG
+
 %left MOD DIVIDE MULTIPLY
 %left PLUS MINUS
 %nonassoc NOT
-%left AND OR
+%left AND OR SPACE
 %left EQUALITY NOTEQUAL LESS GREATER GREATEROREQUAL LESSOREQUAL
 %left SLASHPLUS SLASHMINUS DOUBLEVEE
 %left ASSIGN 
@@ -48,22 +53,20 @@ sessions:
 
 service: SERVICE LBRACE htmls schemas 
 		variables functions 
-		 sessions RBRACE	{}
+		 sessions RBRACE	{ print_endline "actual service"; flush stdout}
 ;
 
 htmls:	/*empty TODO*/			{}
-;
-/*(*html				{}
 	| htmls html			{}
 ;
 
 html:	CONST HTML identifier ASSIGN
-		HTMLTAG htmlbodies HTMLTAG
+		OHTML htmlbodies CHTML
 					{}
 ;
 
 htmlbodies:
-			{}
+	/*empty*/			{}
 	| nehtmlbodies			{}
 ;
 
@@ -73,10 +76,51 @@ nehtmlbodies:
 ;
 
 htmlbody:
-	LESS identifier attributes
-		GREATER			{}
-	| LESS 
-*)*/
+	OPENTAG identifier attributes
+		CLOSETAG		{}
+	| OENDTAG identifier CLOSETAG	{}
+	| OPENGAP identifier CLOSEGAP	{}
+	| OPENTAG INPUT inputattrs 
+		CLOSETAG		{}
+	| OPENTAG SELECT inputattrs
+		CLOSETAG htmlbodies
+		OENDTAG SELECT CLOSETAG	{}
+;
+
+inputattrs:
+	inputattr			{}
+	| inputattrs inputattr		{}
+;
+
+inputattr:
+	NAME attr			{}
+	| TYPE inputtype		{}
+	| SIZE INTCONST			{}
+	| attribute			{}
+;
+
+inputtype:
+	TEXT				{}
+	| RADIO				{}
+;
+
+attributes:
+	/*empty*/			{}
+	| neattributes			{}
+;
+neattributes:
+	attribute			{}
+	| neattributes attribute	{}
+;
+
+attribute:
+	attr				{}
+	| attr ASSIGN attr		{}
+;
+attr:
+	identifier			{}
+	| STRINGCONST			{}
+
 variables:
 	/*empty*/			{}
 	| nevariables			{}
@@ -87,7 +131,7 @@ nevariables:
 ;
 
 variable:
-	typepat identifiers SEMICOLON 	{ /*add variables to hash here*/}
+	typepat identifiers SEMICOLON 	{ (*add variables to hash here*)}
 ;
 
 typepat:
@@ -96,10 +140,10 @@ typepat:
 ;
 
 simpletype:
-	INT				{}
-	| BOOL				{}
-	| STRING			{}
-	| VOID				{}
+	INTDEC				{}
+	| BOOLDEC			{}
+	| STRINGDEC			{}
+	| VOIDDEC			{}
 ;
 
 stms:	/*empty*/			{}
@@ -156,8 +200,8 @@ input:  lvalue ASSIGN identifier	{}
 	
 
 exp:	lvalue				{}
-	| lvalue ASSIGN exp		{ /*check value is in hash*/
-					/*if not throw error */}
+	| lvalue ASSIGN exp		{ (*check value is in hash*)
+					(*if not throw error *)}
 	| exp EQUALITY exp		{}
 	| exp NOTEQUAL exp		{}
 	| exp LESS exp			{}
@@ -166,7 +210,7 @@ exp:	lvalue				{}
 	| exp GREATEROREQUAL exp 	{}
 	| NOT exp			{}
 	| MINUS exp			{}
-	| exp PLUS exp			{ Plus ($1, $3) }
+	| exp PLUS exp			{ (*Plus ($1, $3) *)}
 	| exp MINUS exp			{}
 	| exp MULTIPLY exp		{}
 	| exp DIVIDE exp		{}
@@ -270,7 +314,7 @@ identifiers:
 ;
 
 identifier:
-	IDENTIFIER			{}
+	IDENTIFIER			{ print_endline "parsed id"; flush stdout}
 ;
 
 %%
