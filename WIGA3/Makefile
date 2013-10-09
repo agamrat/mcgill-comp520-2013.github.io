@@ -1,7 +1,10 @@
 CC = ocamlc
 
-main: lexer.cmo wig.cmo main.cmo
+main: lexer.cmo wig.cmo main.cmo tree.cmo
 	ocamlc -o wig lexer.cmo wig.cmo main.cmo
+
+tree.cmo: tree.ml
+	ocamlc -c tree.ml
 
 main.cmo: main.ml
 	ocamlc -c main.ml
